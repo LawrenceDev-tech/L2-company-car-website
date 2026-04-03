@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DriveLux Premium Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #6d28d9;
+      --secondary: #2563eb;
+      --dark: #0f172a;
+      --text: #64748b;
+      --white: #ffffff;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --transition: 0.3s ease;
+    }
+
+    body {
+      font-family: "Outfit", sans-serif;
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    .booking-section {
+      min-height: 100vh;
+      padding: 70px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .booking-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: auto;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .booking-header {
+      padding: 48px 24px 32px;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a, #1e1b4b, #2563eb);
+      color: var(--white);
+    }
+
+    .booking-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 14px;
+    }
+
+    .booking-header h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 10px;
+    }
+
+    .booking-header p {
+      max-width: 650px;
+      margin: auto;
+      color: rgba(255,255,255,0.84);
+      line-height: 1.7;
+    }
+
+    .progress-wrapper,
+    .booking-form,
+    .success-message {
+      padding: 30px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress-fill {
+      width: 14.285%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.35s ease;
+    }
+
+    .step-indicators {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .step-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #475569;
+      transition: var(--transition);
+    }
+
+    .step-dot.active,
+    .step-dot.completed {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 10px 25px rgba(109, 40, 217, 0.25);
+    }
+
+    .form-step {
+      display: none;
+      animation: fadeSlide 0.4s ease;
+    }
+
+    .form-step.active { display: block; }
+
+    .form-step h3 {
+      font-size: 1.55rem;
+      margin-bottom: 8px;
+    }
+
+    .step-text {
+      color: var(--text);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-box label {
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .input-box input,
+    .input-box select,
+    .input-box textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font: inherit;
+      color: var(--dark);
+      outline: none;
+      background: #fff;
+      transition: var(--transition);
+    }
+
+    .input-box input:focus,
+    .input-box select:focus,
+    .input-box textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.08);
+    }
+
+    .input-box textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .full-width { grid-column: 1 / -1; }
+
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .car-card {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      background: #fff;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .car-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    .car-card input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .car-card.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.08);
+    }
+
+    .car-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(109,40,217,0.12), rgba(37,99,235,0.12));
+      color: var(--primary);
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .car-card h4 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .car-card p {
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .car-card strong { font-size: 1.05rem; }
+
+    .upload-box {
+      width: 100%;
+      min-height: 220px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 20px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .upload-box:hover {
+      border-color: var(--primary);
+      background: #f5f3ff;
+    }
+
+    .upload-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(109,40,217,0.12), rgba(37,99,235,0.12));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: var(--primary);
+      font-size: 1.6rem;
+    }
+
+    .upload-box h4 {
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+    }
+
+    .upload-box p {
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .upload-btn-text {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .file-preview {
+      display: none;
+      align-items: center;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .file-preview img {
+      width: 140px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .file-details { flex: 1; }
+
+    .file-details p {
+      font-weight: 600;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    .remove-file-btn {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: #fee2e2;
+      color: #b91c1c;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .remove-file-btn:hover { background: #fecaca; }
+
+    .payment-panel {
+      display: none;
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #f8fafc;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .payment-panel.active { display: block; }
+
+    .payment-panel h4 {
+      margin-bottom: 14px;
+      font-size: 1.06rem;
+    }
+
+    .card-icons {
+      display: flex;
+      gap: 12px;
+      font-size: 38px;
+      margin-bottom: 18px;
+    }
+
+    .fa-cc-visa { color: #1A1F71; }
+    .fa-cc-mastercard { color: #EB001B; }
+    .fa-cc-amex { color: #2E77BC; }
+
+    .payment-note {
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row span { color: var(--text); }
+    .summary-extra { margin-top: 20px; }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: #eef6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .check-item input {
+      margin-top: 3px;
+      width: auto;
+    }
+
+    .error-note {
+      color: var(--danger);
+      margin-top: 16px;
+      display: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      border: none;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .secondary-btn {
+      background: #e2e8f0;
+      color: var(--dark);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: var(--white);
+      display: none;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+    }
+
+    .success-message i {
+      font-size: 3rem;
+      color: #22c55e;
+      margin-bottom: 16px;
+    }
+
+    .success-message h3 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .success-message p {
+      color: var(--text);
+      max-width: 600px;
+      margin: auto;
+      line-height: 1.7;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(18px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 992px) {
+      .car-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .booking-header h1 { font-size: 1.9rem; }
+
+      .progress-wrapper,
+      .booking-form,
+      .success-message { padding: 22px 18px; }
+
+      .input-grid { grid-template-columns: 1fr; }
+
+      .step-indicators { justify-content: center; }
+
+      .step-dot {
+        width: 36px;
+        height: 36px;
+        font-size: 0.92rem;
+      }
+
+      .form-buttons { flex-direction: column; }
+      .btn { width: 100%; }
+
+      .summary-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .file-preview {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .file-preview img {
+        width: 100%;
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="booking-section">
+    <div class="booking-container">
+      <div class="booking-header">
+        <span class="booking-tag"><i class="fa-solid fa-shield"></i> DriveLux Booking</span>
+        <h1>Book Your Premium Ride</h1>
+        <p>Complete all 7 steps to reserve your preferred car professionally, easily, and with a clean booking experience.</p>
+      </div>
+
+      <div class="progress-wrapper">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="step-indicators">
+          <div class="step-dot active">1</div>
+          <div class="step-dot">2</div>
+          <div class="step-dot">3</div>
+          <div class="step-dot">4</div>
+          <div class="step-dot">5</div>
+          <div class="step-dot">6</div>
+          <div class="step-dot">7</div>
+        </div>
+      </div>
+
+      <form id="bookingForm" class="booking-form">
+        <div class="form-step active">
+          <h3>Step 1: Choose Location</h3>
+          <p class="step-text">Select where you want to collect and return the car.</p>
+          <div class="input-grid">
+            <div class="input-box">
+              <label for="pickupLocation">Pick-up Location</label>
+              <select id="pickupLocation" required>
+                <option value="">Select location</option>
+                <option>Aberdeen</option>
+                <option>Lumley</option>
+                <option>Hill Station</option>
+                <option>Congo Cross</option>
+                <option>Wilberforce</option>
+                <option>Juba</option>
+              </select>
+            </div>
+
+            <div class="input-box">
+              <label for="dropoffLocation">Drop-off Location</label>
+              <select id="dropoffLocation" required>
+                <option value="">Select location</option>
+                <option>Aberdeen</option>
+                <option>Lumley</option>
+                <option>Hill Station</option>
+                <option>Congo Cross</option>
+                <option>Wilberforce</option>
+                <option>Juba</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 2: Select Dates &amp; Time</h3>
+          <p class="step-text">Choose your rental dates and preferred pickup and return time.</p>
+          <div class="input-grid">
+            <div class="input-box">
+              <label for="pickupDate">Pick-up Date</label>
+              <input type="date" id="pickupDate" required />
+            </div>
+            <div class="input-box">
+              <label for="returnDate">Return Date</label>
+              <input type="date" id="returnDate" required />
+            </div>
+            <div class="input-box">
+              <label for="pickupTime">Pick-up Time</label>
+              <input type="time" id="pickupTime" required />
+            </div>
+            <div class="input-box">
+              <label for="returnTime">Return Time</label>
+              <input type="time" id="returnTime" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 3: Choose Vehicle</h3>
+          <p class="step-text">Pick the vehicle that fits your comfort and budget.</p>
+          <div class="car-grid">
+            <label class="car-card">
+              <input type="radio" name="carType" value="Business Sedan" data-price="95" required>
+              <div class="car-icon"><i class="fa-solid fa-car-side"></i></div>
+              <h4>Business Sedan</h4>
+              <p>Clean, elegant and perfect for city movement.</p>
+              <strong>$95 / day</strong>
+            </label>
+
+            <label class="car-card">
+              <input type="radio" name="carType" value="Luxury SUV" data-price="120" required>
+              <div class="car-icon"><i class="fa-solid fa-truck"></i></div>
+              <h4>Luxury SUV</h4>
+              <p>Spacious, powerful and suitable for long trips.</p>
+              <strong>$120 / day</strong>
+            </label>
+
+            <label class="car-card">
+              <input type="radio" name="carType" value="Range Rover" data-price="160" required>
+              <div class="car-icon"><i class="fa-solid fa-car"></i></div>
+              <h4>Range Rover</h4>
+              <p>Premium style and executive comfort.</p>
+              <strong>$160 / day</strong>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 4: Personal Information</h3>
+          <p class="step-text">Provide your personal information as the renter.</p>
+          <div class="input-grid">
+            <div class="input-box">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" placeholder="Enter your full name" required />
+            </div>
+            <div class="input-box">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="Enter your email" required />
+            </div>
+            <div class="input-box">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="Enter phone number" required />
+            </div>
+            <div class="input-box">
+              <label for="nationality">Nationality</label>
+              <input type="text" id="nationality" placeholder="Enter nationality" required />
+            </div>
+            <div class="input-box">
+              <label for="age">Age</label>
+              <input type="number" id="age" placeholder="Enter your age" min="18" required />
+            </div>
+            <div class="input-box">
+              <label for="address">Home Address</label>
+              <input type="text" id="address" placeholder="Enter your address" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 5: Driver Details</h3>
+          <p class="step-text">Enter your driving credentials for verification.</p>
+          <div class="input-grid">
+            <div class="input-box">
+              <label for="licenseNumber">Driver License Number</label>
+              <input type="text" id="licenseNumber" placeholder="Enter license number" required />
+            </div>
+            <div class="input-box">
+              <label for="licenseExpiry">License Expiry Date</label>
+              <input type="date" id="licenseExpiry" required />
+            </div>
+            <div class="input-box">
+              <label for="idType">ID Type</label>
+              <select id="idType" required>
+                <option value="">Select ID type</option>
+                <option value="National ID">National ID</option>
+                <option value="Passport">Passport</option>
+                <option value="Driver License">Driver License</option>
+              </select>
+            </div>
+            <div class="input-box">
+              <label for="idNumber">ID / Passport Number</label>
+              <input type="text" id="idNumber" placeholder="Enter document number" required />
+            </div>
+
+            <div class="input-box full-width">
+              <label>Upload Verification Document</label>
+              <input type="file" id="documentUpload" accept="image/*" hidden required>
+              <label for="documentUpload" class="upload-box" id="uploadBox">
+                <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <h4>Upload ID, Passport or Driver License</h4>
+                <p>Choose a clear image for verification</p>
+                <span class="upload-btn-text">Click to Upload</span>
+              </label>
+
+              <div class="file-preview" id="filePreview">
+                <img id="previewImage" src="" alt="Document Preview">
+                <div class="file-details">
+                  <p id="fileName">No file selected</p>
+                  <button type="button" id="removeFile" class="remove-file-btn">Remove File</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 6: Payment Method</h3>
+          <p class="step-text">Choose your preferred payment method and provide the required details.</p>
+
+          <div class="input-box full-width">
+            <label for="paymentMethod">Payment Method</label>
+            <select id="paymentMethod" required>
+              <option value="">Choose payment method</option>
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Orange Money">Orange Money</option>
+              <option value="AfriMoney">AfriMoney</option>
+            </select>
+          </div>
+
+          <div class="payment-panel" id="cardFields">
+            <h4>Card Details</h4>
+            <div class="card-icons">
+              <i class="fa-brands fa-cc-visa"></i>
+              <i class="fa-brands fa-cc-mastercard"></i>
+              <i class="fa-brands fa-cc-amex"></i>
+            </div>
+            <div class="input-grid">
+              <div class="input-box full-width">
+                <label for="cardName">Name on Card</label>
+                <input type="text" id="cardName" placeholder="Enter cardholder name">
+              </div>
+              <div class="input-box full-width">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div class="input-box">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="input-box">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="transferFields">
+            <h4>Bank Transfer</h4>
+            <p class="payment-note">Use the account details below and upload your proof of transfer.</p>
+            <div class="input-grid" style="margin-top: 16px;">
+              <div class="input-box">
+                <label for="bankName">Bank Name</label>
+                <input type="text" id="bankName" placeholder="Enter your bank name">
+              </div>
+              <div class="input-box">
+                <label for="transferRef">Transfer Reference</label>
+                <input type="text" id="transferRef" placeholder="Enter transfer reference">
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="mobileMoneyFields">
+            <h4>Mobile Money Details</h4>
+            <div class="input-grid">
+              <div class="input-box">
+                <label for="mobileNumber">Mobile Money Number</label>
+                <input type="tel" id="mobileNumber" placeholder="Enter mobile number">
+              </div>
+              <div class="input-box">
+                <label for="mobileName">Registered Name</label>
+                <input type="text" id="mobileName" placeholder="Enter account name">
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="cashFields">
+            <h4>Cash Payment</h4>
+            <p class="payment-note">Cash payment will be completed physically at pickup after booking confirmation.</p>
+          </div>
+        </div>
+
+        <div class="form-step">
+          <h3>Step 7: Confirm Booking</h3>
+          <p class="step-text">Review your rental summary and submit your booking request.</p>
+
+          <div class="summary-box">
+            <div class="summary-row"><span>Client Name</span><strong id="summaryName">-</strong></div>
+            <div class="summary-row"><span>Pick-up</span><strong id="summaryPickup">-</strong></div>
+            <div class="summary-row"><span>Drop-off</span><strong id="summaryDropoff">-</strong></div>
+            <div class="summary-row"><span>Rental Dates</span><strong id="summaryDates">-</strong></div>
+            <div class="summary-row"><span>Selected Car</span><strong id="summaryCar">-</strong></div>
+            <div class="summary-row"><span>Payment Method</span><strong id="summaryPayment">-</strong></div>
+            <div class="summary-row"><span>Total Price</span><strong id="summaryPrice">$0.00</strong></div>
+          </div>
+
+          <div class="input-grid summary-extra">
+            <div class="input-box full-width">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" rows="4" placeholder="Write extra booking details..."></textarea>
+            </div>
+
+            <label class="check-item full-width">
+              <input type="checkbox" id="confirmBooking" required />
+              <span>I confirm that all booking details are correct and ready to be submitted.</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="error-note" id="errorNote">Please complete all required fields before moving to the next step.</p>
+
+        <div class="form-buttons">
+          <button type="button" class="btn secondary-btn" id="prevBtn">Previous</button>
+          <button type="button" class="btn primary-btn" id="nextBtn">Next Step</button>
+          <button type="submit" class="btn submit-btn" id="submitBtn">Submit Booking</button>
+        </div>
+      </form>
+
+      <div class="success-message" id="successMessage">
+        <i class="fa-solid fa-circle-check"></i>
+        <h3>Booking Submitted Successfully</h3>
+        <p>Your booking request has been sent. Our team will contact you shortly to confirm your reservation.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const steps = document.querySelectorAll('.form-step');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressFill = document.getElementById('progressFill');
+    const stepDots = document.querySelectorAll('.step-dot');
+    const form = document.getElementById('bookingForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorNote = document.getElementById('errorNote');
+    const carCards = document.querySelectorAll('.car-card');
+
+    const documentUpload = document.getElementById('documentUpload');
+    const previewImage = document.getElementById('previewImage');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const removeFile = document.getElementById('removeFile');
+    const uploadBox = document.getElementById('uploadBox');
+
+    const paymentMethod = document.getElementById('paymentMethod');
+    const cardFields = document.getElementById('cardFields');
+    const transferFields = document.getElementById('transferFields');
+    const mobileMoneyFields = document.getElementById('mobileMoneyFields');
+    const cashFields = document.getElementById('cashFields');
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+
+    let currentStep = 0;
+
+    carCards.forEach((card) => {
+      const radio = card.querySelector('input[type="radio"]');
+      card.addEventListener('click', () => {
+        carCards.forEach((item) => item.classList.remove('selected'));
+        radio.checked = true;
+        card.classList.add('selected');
+      });
+    });
+
+    function getSelectedCar() {
+      return document.querySelector('input[name="carType"]:checked');
+    }
+
+    function calculateDays() {
+      const pickupDate = document.getElementById('pickupDate').value;
+      const returnDate = document.getElementById('returnDate').value;
+      if (!pickupDate || !returnDate) return 0;
+
+      const start = new Date(pickupDate);
+      const end = new Date(returnDate);
+      const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+      return diff > 0 ? diff : 1;
+    }
+
+    function calculateTotalPrice() {
+      const selectedCar = getSelectedCar();
+      const days = calculateDays();
+      if (!selectedCar) return 0;
+      return Number(selectedCar.dataset.price) * Math.max(days, 1);
+    }
+
+    function validateStep(stepIndex) {
+      const currentFields = steps[stepIndex].querySelectorAll('input, select, textarea');
+      let isValid = true;
+
+      currentFields.forEach((field) => {
+        if (!field.hasAttribute('required')) return;
+
+        if (field.type === 'radio') {
+          const checked = steps[stepIndex].querySelector(`input[name="${field.name}"]:checked`);
+          if (!checked) isValid = false;
+          return;
+        }
+
+        if (field.type === 'checkbox') {
+          if (!field.checked) isValid = false;
+          return;
+        }
+
+        if (field.type === 'file') {
+          if (!field.files || !field.files.length) isValid = false;
+          return;
+        }
+
+        if (!field.value.trim()) {
+          isValid = false;
+        }
+      });
+
+      errorNote.style.display = isValid ? 'none' : 'block';
+      return isValid;
+    }
+
+    function updateSummary() {
+      const pickup = document.getElementById('pickupLocation').value || '-';
+      const dropoff = document.getElementById('dropoffLocation').value || '-';
+      const pickupDate = document.getElementById('pickupDate').value || '-';
+      const returnDate = document.getElementById('returnDate').value || '-';
+      const fullName = document.getElementById('fullName').value || '-';
+      const chosenPayment = document.getElementById('paymentMethod').value || '-';
+      const selectedCar = getSelectedCar();
+
+      document.getElementById('summaryName').textContent = fullName;
+      document.getElementById('summaryPickup').textContent = pickup;
+      document.getElementById('summaryDropoff').textContent = dropoff;
+      document.getElementById('summaryDates').textContent = `${pickupDate} to ${returnDate}`;
+      document.getElementById('summaryCar').textContent = selectedCar ? selectedCar.value : '-';
+      document.getElementById('summaryPayment').textContent = chosenPayment;
+      document.getElementById('summaryPrice').textContent = `$${calculateTotalPrice().toFixed(2)}`;
+    }
+
+    function updateForm() {
+      steps.forEach((step, index) => {
+        step.classList.toggle('active', index === currentStep);
+      });
+
+      stepDots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < currentStep) dot.classList.add('completed');
+        if (index === currentStep) dot.classList.add('active');
+      });
+
+      progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+      prevBtn.style.display = currentStep === 0 ? 'none' : 'inline-block';
+
+      if (currentStep === steps.length - 1) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+        updateSummary();
+      } else {
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+      }
+
+      errorNote.style.display = 'none';
+    }
+
+    function hideAllPaymentFields() {
+      [cardFields, transferFields, mobileMoneyFields, cashFields].forEach((panel) => {
+        panel.classList.remove('active');
+      });
+    }
+
+    function clearPaymentRequired() {
+      document.querySelectorAll('#cardFields input, #transferFields input, #mobileMoneyFields input').forEach((input) => {
+        input.removeAttribute('required');
+      });
+    }
+
+    function setRequiredFields(selector) {
+      document.querySelectorAll(selector).forEach((input) => {
+        input.setAttribute('required', 'required');
+      });
+    }
+
+    paymentMethod.addEventListener('change', function () {
+      hideAllPaymentFields();
+      clearPaymentRequired();
+
+      const selected = this.value;
+
+      if (selected === 'Credit Card') {
+        cardFields.classList.add('active');
+        setRequiredFields('#cardFields input');
+      } else if (selected === 'Bank Transfer') {
+        transferFields.classList.add('active');
+        setRequiredFields('#transferFields input');
+      } else if (selected === 'Orange Money' || selected === 'AfriMoney') {
+        mobileMoneyFields.classList.add('active');
+        setRequiredFields('#mobileMoneyFields input');
+      } else if (selected === 'Cash') {
+        cashFields.classList.add('active');
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (!validateStep(currentStep)) return;
+
+      if (currentStep === 1) {
+        const pickupDate = document.getElementById('pickupDate').value;
+        const returnDate = document.getElementById('returnDate').value;
+
+        if (new Date(returnDate) < new Date(pickupDate)) {
+          errorNote.textContent = 'Return date cannot be earlier than pick-up date.';
+          errorNote.style.display = 'block';
+          return;
+        }
+      }
+
+      errorNote.textContent = 'Please complete all required fields before moving to the next step.';
+
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateForm();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateForm();
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validateStep(currentStep)) return;
+
+      form.style.display = 'none';
+      successMessage.style.display = 'block';
+    });
+
+    if (documentUpload) {
+      documentUpload.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Please upload a valid image file (JPG, PNG, or WEBP).');
+          documentUpload.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          fileName.textContent = file.name;
+          filePreview.style.display = 'flex';
+          uploadBox.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    removeFile.addEventListener('click', () => {
+      documentUpload.value = '';
+      previewImage.src = '';
+      fileName.textContent = '';
+      filePreview.style.display = 'none';
+      uploadBox.style.display = 'flex';
+    });
+
+    if (cardNumber) {
+      cardNumber.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+        value = value.replace(/(.{4})/g, '$1 ').trim();
+        e.target.value = value;
+      });
+    }
+
+    if (expiryDate) {
+      expiryDate.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        if (value.length >= 3) value = `${value.substring(0, 2)}/${value.substring(2)}`;
+        e.target.value = value;
+      });
+    }
+
+    if (cvv) {
+      cvv.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+      });
+    }
+
+    updateForm();
+  </script>
+</body>
+</html>

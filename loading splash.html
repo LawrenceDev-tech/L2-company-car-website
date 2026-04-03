@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading | DriveLux</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="loading.css" />
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #6d28d9;
+  --primary-dark: #4c1d95;
+  --secondary: #0f172a;
+  --white: #ffffff;
+  --text-light: rgba(255, 255, 255, 0.82);
+  --glass: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.14);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Outfit", sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #09090f;
+}
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(109, 40, 217, 0.35), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.28), transparent 35%),
+    linear-gradient(135deg, #070b16 0%, #0f172a 45%, #1e1b4b 100%);
+  z-index: 9999;
+  transition: opacity 0.8s ease, visibility 0.8s ease, transform 0.8s ease;
+}
+
+.splash-screen.hide {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.03);
+}
+
+.splash-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  pointer-events: none;
+}
+
+.splash-content {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  padding: 42px 28px;
+  border-radius: 28px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  animation: fadeUp 1s ease;
+}
+
+.logo-box {
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 22px;
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 30px rgba(0,0,0,0.25);
+  animation: floatLogo 3s ease-in-out infinite;
+}
+
+.logo-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
+}
+
+.brand-name {
+  font-size: 2.7rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.brand-name span {
+  color: #a855f7;
+}
+
+.brand-desc {
+  max-width: 400px;
+  margin: 0 auto 28px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-light);
+}
+
+.progress-wrapper {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.12);
+  margin-bottom: 16px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7c3aed, #2563eb, #a855f7);
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.55);
+  transition: width 0.12s linear;
+}
+
+.loading-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--white);
+  font-size: 0.96rem;
+}
+
+.loading-text {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.dots {
+  display: inline-flex;
+  min-width: 24px;
+}
+
+.dots span {
+  animation: blink 1.4s infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.percent {
+  color: #d8b4fe;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  0%, 20% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .splash-content {
+    padding: 34px 22px;
+    border-radius: 24px;
+  }
+
+  .logo-box {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+  }
+
+  .logo-img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .brand-name {
+    font-size: 2.2rem;
+  }
+
+  .brand-desc {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .splash-screen {
+    padding: 16px;
+  }
+
+  .splash-content {
+    padding: 28px 18px;
+    border-radius: 22px;
+  }
+
+  .logo-box {
+    width: 84px;
+    height: 84px;
+    margin-bottom: 18px;
+  }
+
+  .logo-img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-name {
+    font-size: 1.9rem;
+  }
+
+  .brand-desc {
+    font-size: 0.92rem;
+    margin-bottom: 22px;
+  }
+
+  .progress-wrapper {
+    height: 9px;
+  }
+
+  .loading-row {
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-overlay"></div>
+
+    <div class="splash-content">
+      <!-- Logo -->
+      <div class="logo-box">
+        <img src="https://cdn-icons-png.flaticon.com/512/744/744465.png" alt="DriveLux Logo" class="logo-img">
+      </div>
+
+      <!-- Brand -->
+      <h1 class="brand-name">Drive<span>Lux</span></h1>
+      <p class="brand-desc">
+        Premium car rental experience with comfort, elegance, and easy booking.
+      </p>
+
+      <!-- Progress -->
+      <div class="progress-wrapper">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="loading-row">
+        <span class="loading-text">Loading</span>
+        <span class="dots">
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+        </span>
+        <span class="percent" id="percentText">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <script >
+    window.addEventListener("DOMContentLoaded", () => {
+  const splashScreen = document.getElementById("splashScreen");
+  const progressBar = document.getElementById("progressBar");
+  const percentText = document.getElementById("percentText");
+
+  let progress = 0;
+  const duration = 2600; // total loading time
+  const intervalTime = 30;
+  const step = 100 / (duration / intervalTime);
+
+  const loader = setInterval(() => {
+    progress += step;
+
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(loader);
+
+      progressBar.style.width = progress + "%";
+      percentText.textContent = Math.floor(progress) + "%";
+
+      setTimeout(() => {
+        splashScreen.classList.add("hide");
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 700);
+      }, 250);
+    } else {
+      progressBar.style.width = progress + "%";
+      percentText.textContent = Math.floor(progress) + "%";
+    }
+  }, intervalTime);
+});
+  </script>
+</body>
+</html>
